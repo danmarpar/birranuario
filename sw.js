@@ -6,8 +6,11 @@ const urlsToCache = [
     REPO_NAME,
     REPO_NAME + '/index.html',
     REPO_NAME + '/styles.css',
-    REPO_NAME + '/app.js',
-    REPO_NAME + '/manifest.json'
+    REPO_NAME + '/js/app.js',
+    REPO_NAME + '/combined_birra_data.csv',
+    REPO_NAME + '/manifest.json',
+    REPO_NAME + '/icons/icon-192.png',
+    REPO_NAME + '/icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
