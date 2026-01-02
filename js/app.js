@@ -29,6 +29,7 @@ async function loadData() {
         populateYearDropdown();
         initializeOverview();
         initializePlayers();
+        initializeNavigation();
     } catch (error) {
         console.error('Error loading data:', error);
     }
@@ -43,6 +44,10 @@ function populateYearDropdown() {
         option.textContent = year;
         dropdown.appendChild(option);
     });
+    // Set default to 2025
+    if (years.includes('2025')) {
+        dropdown.value = '2025';
+    }
 }
 
 function initializeOverview() {
@@ -141,19 +146,34 @@ function drawMonthChart() {
 function initializePlayers() {
     document.getElementById('playerDropdown').addEventListener('change', updatePlayerInsights);
     document.getElementById('yearDropdown').addEventListener('change', updatePlayerInsights);
-    document.querySelectorAll('.insights-nav a').forEach(a => {
-        a.addEventListener('click', (e) => {
-            e.preventDefault();
-            document.querySelectorAll('.insights-nav a').forEach(link => link.classList.remove('active'));
-            a.classList.add('active');
-            document.querySelectorAll('.insight-section').forEach(sec => sec.classList.remove('active'));
-            const target = document.getElementById(a.getAttribute('href').substring(1));
-            target.classList.add('active');
-        });
+    document.getElementById('insightDropdown').addEventListener('change', (e) => {
+        const targetId = e.target.value;
+        document.querySelectorAll('.insight-section').forEach(sec => sec.classList.remove('active'));
+        const target = document.getElementById(targetId);
+        target.classList.add('active');
     });
     // Default to first
-    document.querySelector('.insights-nav a').click();
+    document.getElementById('insightDropdown').value = 'individual';
+    document.getElementById('individual').classList.add('active');
     updatePlayerInsights();
+}
+
+function initializeNavigation() {
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const sections = document.querySelectorAll('main > section');
+            sections.forEach(section => {
+                section.style.display = section.id === targetId ? 'block' : 'none';
+            });
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+    // Default to overview
+    document.querySelector('nav a[href="#overview"]').click();
 }
 
 function updatePlayerInsights() {
@@ -190,18 +210,18 @@ function computeIndividualConsumption(player, year) {
     const dias1_2 = playerData.filter(v => v >= 1 && v <= 2).length;
 
     div.innerHTML = `
-        <p>Total: ${total}</p>
-        <p>Maximo en un dia: ${max}</p>
-        <p>Media: ${media.toFixed(2)}</p>
-        <p>Mediana: ${mediana}</p>
-        <p>Desviación: ${desviacion.toFixed(2)} (${((desviacion / media) * 100).toFixed(2)}%)</p>
-        <p>Media bebiendo: ${mediaBebiendo.toFixed(2)}</p>
-        <p>Mediana bebiendo: ${medianaBebiendo}</p>
-        <p>Desviación bebiendo: ${desviacionBebiendo.toFixed(2)} (${((desviacionBebiendo / mediaBebiendo) * 100).toFixed(2)}%)</p>
-        <p>Dias con 10 o más: ${dias10} (${((dias10 / playerData.length) * 100).toFixed(2)}%)</p>
-        <p>Dias con 6-9: ${dias6_9} (${((dias6_9 / playerData.length) * 100).toFixed(2)}%)</p>
-        <p>Dias con 3-5: ${dias3_5} (${((dias3_5 / playerData.length) * 100).toFixed(2)}%)</p>
-        <p>Dias con 1-2: ${dias1_2} (${((dias1_2 / playerData.length) * 100).toFixed(2)}%)</p>
+        <p><span class="stat-label">Total:</span> <span class="stat-value">${total}</span></p>
+        <p><span class="stat-label">Maximo en un dia:</span> <span class="stat-value">${max}</span></p>
+        <p><span class="stat-label">Media:</span> <span class="stat-value">${media.toFixed(2)}</span></p>
+        <p><span class="stat-label">Mediana:</span> <span class="stat-value">${mediana}</span></p>
+        <p><span class="stat-label">Desviación:</span> <span class="stat-value">${desviacion.toFixed(2)}</span> (<span class="stat-value">${((desviacion / media) * 100).toFixed(2)}%</span>)</p>
+        <p><span class="stat-label">Media bebiendo:</span> <span class="stat-value">${mediaBebiendo.toFixed(2)}</span></p>
+        <p><span class="stat-label">Mediana bebiendo:</span> <span class="stat-value">${medianaBebiendo}</span></p>
+        <p><span class="stat-label">Desviación bebiendo:</span> <span class="stat-value">${desviacionBebiendo.toFixed(2)}</span> (<span class="stat-value">${((desviacionBebiendo / mediaBebiendo) * 100).toFixed(2)}%</span>)</p>
+        <p><span class="stat-label">Dias con 10 o más:</span> <span class="stat-value">${dias10}</span> (<span class="stat-value">${((dias10 / playerData.length) * 100).toFixed(2)}%</span>)</p>
+        <p><span class="stat-label">Dias con 6-9:</span> <span class="stat-value">${dias6_9}</span> (<span class="stat-value">${((dias6_9 / playerData.length) * 100).toFixed(2)}%</span>)</p>
+        <p><span class="stat-label">Dias con 3-5:</span> <span class="stat-value">${dias3_5}</span> (<span class="stat-value">${((dias3_5 / playerData.length) * 100).toFixed(2)}%</span>)</p>
+        <p><span class="stat-label">Dias con 1-2:</span> <span class="stat-value">${dias1_2}</span> (<span class="stat-value">${((dias1_2 / playerData.length) * 100).toFixed(2)}%</span>)</p>
     `;
 }
 
@@ -358,8 +378,44 @@ function computeWeekdays(player, year) {
 
 function computeMonthlyTrends(player, year) {
     const div = document.getElementById('trends-content');
-    // Simplified, similar to monthly
-    div.innerHTML = '<p>Monthly trends computed similarly to monthly stats.</p>';
+    const monthlyRanks = [];
+    const monthlyTotals = [];
+    for (let m = 1; m <= 12; m++) {
+        const monthStr = m.toString().padStart(2, '0');
+        const monthData = data.filter(d => d.date.startsWith(`${year}-${monthStr}`));
+        if (monthData.length > 0) {
+            const playerTotals = players.map(p => monthData.reduce((s, d) => s + d[p], 0));
+            const sortedTotals = [...playerTotals].sort((a, b) => b - a);
+            const rank = sortedTotals.indexOf(playerTotals[players.indexOf(player)]) + 1;
+            monthlyRanks.push(rank);
+            monthlyTotals.push(playerTotals[players.indexOf(player)]);
+        }
+    }
+    const mesesMas = monthlyRanks.filter(r => r === 1).length;
+    const mesesMenos = monthlyRanks.filter(r => r === 5).length; // assuming 5 players
+    const mediaPosicion = monthlyRanks.reduce((s, v) => s + v, 0) / monthlyRanks.length;
+    const posicionModa = mode(monthlyRanks);
+    const posicionMediana = median(monthlyRanks);
+    const desviacion = stdDev(monthlyRanks);
+    const strongestMonthIndex = monthlyTotals.indexOf(Math.max(...monthlyTotals));
+    const strongestMonth = (strongestMonthIndex + 1).toString().padStart(2, '0');
+    const strongestData = data.filter(d => d.date.startsWith(`${year}-${strongestMonth}`)).map(d => d[player]);
+    const mediaDiariaFuerte = strongestData.reduce((s, v) => s + v, 0) / strongestData.length;
+    const mediaDiariaFuerteSinCeros = strongestData.filter(v => v > 0).reduce((s, v) => s + v, 0) / strongestData.filter(v => v > 0).length;
+    const mediaCerosPorMes = (365 - data.filter(d => d.date.startsWith(year)).filter(d => d[player] > 0).length) / 12; // approx
+    const mediaDiasBebiendoPorMes = data.filter(d => d.date.startsWith(year)).filter(d => d[player] > 0).length / 12;
+    div.innerHTML = `
+        <p><span class="stat-label">Meses bebiendo el que más:</span> <span class="stat-value">${mesesMas}</span></p>
+        <p><span class="stat-label">Meses bebiendo el que menos:</span> <span class="stat-value">${mesesMenos}</span></p>
+        <p><span class="stat-label">Media de posición en el mes:</span> <span class="stat-value">${mediaPosicion.toFixed(2)}</span></p>
+        <p><span class="stat-label">Posición de moda en el mes:</span> <span class="stat-value">${posicionModa}</span></p>
+        <p><span class="stat-label">Posición mediana en el mes:</span> <span class="stat-value">${posicionMediana}</span></p>
+        <p><span class="stat-label">Desviacion:</span> <span class="stat-value">${desviacion.toFixed(2)}</span></p>
+        <p><span class="stat-label">Media diaria en el mes más fuerte:</span> <span class="stat-value">${mediaDiariaFuerte.toFixed(2)}</span></p>
+        <p><span class="stat-label">Media diaria sin ceros en el mes más fuerte:</span> <span class="stat-value">${mediaDiariaFuerteSinCeros.toFixed(2)}</span></p>
+        <p><span class="stat-label">Media de ceros por mes:</span> <span class="stat-value">${mediaCerosPorMes.toFixed(2)}</span></p>
+        <p><span class="stat-label">Media de dias bebiendo por mes:</span> <span class="stat-value">${mediaDiasBebiendoPorMes.toFixed(2)}</span></p>
+    `;
 }
 
 function computeHighConsumption(player, year) {

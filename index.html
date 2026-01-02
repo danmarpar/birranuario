@@ -46,21 +46,22 @@
                     <!-- populated by JS -->
                 </select>
             </div>
-            <nav class="insights-nav">
-                <ul>
-                    <li><a href="#individual">Individual Consumption</a></li>
-                    <li><a href="#overall">Overall Consumption</a></li>
-                    <li><a href="#yearly">Yearly Trends</a></li>
-                    <li><a href="#monthly">Monthly Stats</a></li>
-                    <li><a href="#streaks">Streaks</a></li>
-                    <li><a href="#relative">Relative Rankings</a></li>
-                    <li><a href="#weekdays">Day of Week</a></li>
-                    <li><a href="#trends">Monthly Trends</a></li>
-                    <li><a href="#high">High Consumption</a></li>
-                    <li><a href="#historical">Historical Streaks</a></li>
-                    <li><a href="#topdays">Top Days</a></li>
-                </ul>
-            </nav>
+            <div id="insight-select">
+                <label for="insightDropdown">Select Insight:</label>
+                <select id="insightDropdown">
+                    <option value="individual">Individual Consumption</option>
+                    <option value="overall">Overall Consumption</option>
+                    <option value="yearly">Yearly Trends</option>
+                    <option value="monthly">Monthly Stats</option>
+                    <option value="streaks">Streaks</option>
+                    <option value="relative">Relative Rankings</option>
+                    <option value="weekdays">Day of Week</option>
+                    <option value="trends">Monthly Trends</option>
+                    <option value="high">High Consumption</option>
+                    <option value="historical">Historical Streaks</option>
+                    <option value="topdays">Top Days</option>
+                </select>
+            </div>
             <div id="insights">
                 <div id="individual" class="insight-section">
                     <h3>Individual Consumption Stats</h3>
