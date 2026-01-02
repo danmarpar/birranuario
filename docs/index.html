@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birra Data Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <header>
+        <h1>Birra Data Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#players">Player Insights</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <h3>Yearly Table</h3>
+            <div id="year-table"></div>
+            <h3>Yearly Chart</h3>
+            <canvas id="yearChart" width="400" height="200"></canvas>
+            <h3>Player Chart</h3>
+            <canvas id="playerChart" width="400" height="200"></canvas>
+            <h3>Monthly Chart</h3>
+            <canvas id="monthChart" width="400" height="200"></canvas>
+        </section>
+        <section id="players">
+            <h2>Player Insights</h2>
+            <div id="player-select">
+                <label for="playerDropdown">Select Player:</label>
+                <select id="playerDropdown">
+                    <option value="CFC">CFC</option>
+                    <option value="JCR">JCR</option>
+                    <option value="JSP">JSP</option>
+                    <option value="DMP">DMP</option>
+                    <option value="DSS">DSS</option>
+                </select>
+                <label for="yearDropdown">Select Year:</label>
+                <select id="yearDropdown">
+                    <!-- populated by JS -->
+                </select>
+            </div>
+            <nav class="insights-nav">
+                <ul>
+                    <li><a href="#individual">Individual Consumption</a></li>
+                    <li><a href="#overall">Overall Consumption</a></li>
+                    <li><a href="#yearly">Yearly Trends</a></li>
+                    <li><a href="#monthly">Monthly Stats</a></li>
+                    <li><a href="#streaks">Streaks</a></li>
+                    <li><a href="#relative">Relative Rankings</a></li>
+                    <li><a href="#weekdays">Day of Week</a></li>
+                    <li><a href="#trends">Monthly Trends</a></li>
+                    <li><a href="#high">High Consumption</a></li>
+                    <li><a href="#historical">Historical Streaks</a></li>
+                    <li><a href="#topdays">Top Days</a></li>
+                </ul>
+            </nav>
+            <div id="insights">
+                <div id="individual" class="insight-section">
+                    <h3>Individual Consumption Stats</h3>
+                    <div id="individual-content"></div>
+                </div>
+                <div id="overall" class="insight-section">
+                    <h3>Overall Consumption Stats</h3>
+                    <div id="overall-content"></div>
+                </div>
+                <div id="yearly" class="insight-section">
+                    <h3>Yearly Trends</h3>
+                    <div id="yearly-content"></div>
+                </div>
+                <div id="monthly" class="insight-section">
+                    <h3>Monthly Stats</h3>
+                    <div id="monthly-content"></div>
+                </div>
+                <div id="streaks" class="insight-section">
+                    <h3>Streaks</h3>
+                    <div id="streaks-content"></div>
+                </div>
+                <div id="relative" class="insight-section">
+                    <h3>Relative Rankings</h3>
+                    <div id="relative-content"></div>
+                </div>
+                <div id="weekdays" class="insight-section">
+                    <h3>Day of Week</h3>
+                    <div id="weekdays-content"></div>
+                </div>
+                <div id="trends" class="insight-section">
+                    <h3>Monthly Trends</h3>
+                    <div id="trends-content"></div>
+                </div>
+                <div id="high" class="insight-section">
+                    <h3>High Consumption</h3>
+                    <div id="high-content"></div>
+                </div>
+                <div id="historical" class="insight-section">
+                    <h3>Historical Streaks</h3>
+                    <div id="historical-content"></div>
+                </div>
+                <div id="topdays" class="insight-section">
+                    <h3>Top Days</h3>
+                    <div id="topdays-content"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 Birra Dashboard</p>
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

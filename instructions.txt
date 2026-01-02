@@ -1,0 +1,327 @@
+Create a website that is a dashboard for the Birra data from the combined_birra_data.csv file. The website should have the following features:
+- A table that shows the data for each year
+- A chart that shows the data for each year
+- A chart that shows the data for each player
+- A chart that shows the data for each month
+
+The website should be a Progressive Web Apps (PWA) and hosted in github pages.
+The website should be responsive and mobile friendly.
+The website should be built using HTML, CSS, and JavaScript ECS6+. Don't use nothing that required plugins or things fancy.
+
+
+Furhtermore it should have insight on of each player, create a dashboard that shows the data for each player in a visually appealing way wiht trnasition aniumations and menus in these categories:
+1. Individual Consumption Stats (Per Player, Per Year)
+Total: Sum of all daily scores for a player in a year.
+Computation: Sum(scores[player][year]).
+Parameters: player, year, daily_scores[date][player].
+Maximo en un dia: Maximum daily score for a player in a year.
+Computation: Max(scores[player][year]).
+Parameters: player, year, daily_scores[date][player].
+Media: Average daily score for a player in a year (including zeros).
+Computation: Mean(scores[player][year]).
+Parameters: player, year, daily_scores[date][player].
+Mediana: Median daily score for a player in a year.
+Computation: Median(scores[player][year]).
+Parameters: player, year, daily_scores[date][player].
+Desviación: Standard deviation of daily scores for a player in a year.
+Computation: StdDev(scores[player][year]).
+Parameters: player, year, daily_scores[date][player].
+En porcentaje (Desviación): Desviación as percentage of Media.
+Computation: (Desviación / Media) * 100.
+Parameters: Desviación, Media (computed above).
+Media bebiendo: Average daily score excluding zeros.
+Computation: Mean(scores[player][year] where score > 0).
+Parameters: player, year, daily_scores[date][player].
+Mediana bebiendo: Median daily score excluding zeros.
+Computation: Median(scores[player][year] where score > 0).
+Parameters: player, year, daily_scores[date][player].
+Desviación bebiendo: Standard deviation excluding zeros.
+Computation: StdDev(scores[player][year] where score > 0).
+Parameters: player, year, daily_scores[date][player].
+En porcentaje (Desviación bebiendo): Desviación bebiendo as percentage of Media bebiendo.
+Computation: (Desviación bebiendo / Media bebiendo) * 100.
+Parameters: Desviación bebiendo, Media bebiendo.
+Dias con 10 o más: Count of days with score >= 10.
+Computation: Count(scores[player][year] >= 10).
+Parameters: player, year, daily_scores[date][player].
+Dias con 6 o más y menos de 10: Count of days with 6 <= score < 10.
+Computation: Count(6 <= scores[player][year] < 10).
+Parameters: player, year, daily_scores[date][player].
+Dias con 3, 4 ó 5: Count of days with score in [3,4,5].
+Computation: Count(scores[player][year] in [3,4,5]).
+Parameters: player, year, daily_scores[date][player].
+Dias con 1 o 2: Count of days with score in [1,2].
+Computation: Count(scores[player][year] in [1,2]).
+Parameters: player, year, daily_scores[date][player].
+En porcentaje (for each day range): Percentage of days in each range out of total days.
+Computation: (Count for range / Total days) * 100.
+Parameters: Count for range, total_days_in_year (365 or actual).
+2. Overall Consumption Stats (Group)
+Total anual: Sum of all daily scores across all players in a year.
+Computation: Sum(all scores[year]).
+Parameters: year, daily_scores[date][all_players].
+Máximo en un día: Max total score in a single day across players.
+Computation: Max(sum(scores[date] for all players)).
+Parameters: year, daily_scores[date][all_players].
+Media por cabeza: Total anual / number of players.
+Computation: Total anual / 5.
+Parameters: Total anual.
+Mínimo en un día: Min total score in a single day.
+Computation: Min(sum(scores[date] for all players)).
+Parameters: year, daily_scores[date][all_players].
+Media diaria y por cabeza: Average daily total / number of players.
+Computation: (Total anual / days) / 5.
+Parameters: Total anual, days.
+Moda y por cabeza: Mode of daily totals / number of players.
+Computation: Mode(sum(scores[date])) / 5.
+Parameters: daily_totals[date].
+Días en la moda: Count of days with total = Moda.
+Computation: Count(daily_totals == Moda).
+Parameters: daily_totals, Moda.
+Mediana y por cabeza: Median of daily totals / 5.
+Computation: Median(daily_totals) / 5.
+Parameters: daily_totals.
+Desviacion y porcentaje: StdDev of daily totals, and as % of mean.
+Computation: StdDev(daily_totals), (StdDev / Mean) * 100.
+Parameters: daily_totals.
+3. Por Años (Yearly Trends)
+Variación y porcentaje: Difference in Total from previous year, and % change.
+Computation: Total[year] - Total[year-1], ((Total[year] - Total[year-1]) / Total[year-1]) * 100.
+Parameters: player, year, Totals[year] for multiple years.
+Incremento anual*: Difference in Total from previous year.
+Computation: Total[year] - Total[year-1].
+Parameters: player, year, Totals[year-1 to year].
+Porcentual (Incremento): Percentage change.
+Computation: ((Total[year] - Total[year-1]) / Total[year-1]) * 100.
+Parameters: Incremento, Total[year-1].
+Media (Por años): Average Total across years.
+Computation: Mean(Totals[all_years]).
+Parameters: player, Totals[year] for all years.
+Mediana (Por años): Median Total across years.
+Computation: Median(Totals[all_years]).
+Parameters: player, Totals[year] for all years.
+Desviación (Por años): StdDev of Totals across years.
+Computation: StdDev(Totals[all_years]).
+Parameters: player, Totals[year] for all years.
+Porcentual (Desviación años): Desviación as % of Media.
+Computation: (Desviación / Media) * 100.
+Parameters: Desviación, Media.
+Media diaria en el mes que más se bebe: Average daily score in the month with highest total.
+Computation: For each month, find month with max sum(scores), then mean(scores in that month).
+Parameters: player, year, daily_scores grouped by month.
+Media diaria en el mes que menos se bebe: Same for min month.
+Computation: As above for min.
+4. Por Meses (Monthly Stats)
+Max (Por meses): Max monthly total for a player.
+Computation: Max(sum(scores[month])).
+Parameters: player, year, monthly_totals.
+Min (Por meses): Min monthly total.
+Computation: Min(sum(scores[month])).
+Parameters: player, year, monthly_totals.
+Media (Por meses): Average monthly total.
+Computation: Mean(monthly_totals).
+Parameters: player, year, monthly_totals.
+Mediana (Por meses): Median monthly total.
+Computation: Median(monthly_totals).
+Parameters: player, year, monthly_totals.
+Desviación (Por meses): StdDev of monthly totals.
+Computation: StdDev(monthly_totals).
+Parameters: player, year, monthly_totals.
+Porcentual (Desviación meses): Desviación as % of Media.
+Computation: (Desviación / Media) * 100.
+Parameters: Desviación, Media.
+5. Por Rachas (Streaks)
+Dias bebiendo más que el anterior: Count of days where score > previous day's score.
+Computation: Count(scores[i] > scores[i-1] for i in days).
+Parameters: player, year, sorted daily_scores.
+Dias bebiendo menos que el anterior: Count of days where score < previous.
+Computation: Count(scores[i] < scores[i-1]).
+Parameters: player, year, sorted daily_scores.
+Dias bebiendo igual que el anterior: Count of days where score == previous.
+Computation: Count(scores[i] == scores[i-1]).
+Parameters: player, year, sorted daily_scores.
+Media (Diferencia diaria): Average of (score - previous_score).
+Computation: Mean(scores[i] - scores[i-1]).
+Parameters: player, year, sorted daily_scores.
+Mediana (Diferencia diaria): Median of differences.
+Computation: Median(differences).
+Parameters: differences.
+Moda (Diferencia diaria): Mode of differences.
+Computation: Mode(differences).
+Parameters: differences.
+Mas días seguidos bebiendo: Longest streak of score > 0.
+Computation: Max consecutive days with score > 0.
+Parameters: player, year, daily_scores.
+Más días seguidos sin beber: Longest streak of score == 0.
+Computation: Max consecutive days with score == 0.
+Parameters: player, year, daily_scores.
+Total dias bebiendo: Count of days with score > 0.
+Computation: Count(scores > 0).
+Parameters: player, year, daily_scores.
+Total dias sin beber: Count of days with score == 0.
+Computation: Count(scores == 0).
+Parameters: player, year, daily_scores.
+Cantidad de moda: Mode of scores.
+Computation: Mode(scores[player][year]).
+Parameters: player, year, daily_scores.
+Días bebiendo en la moda: Count of days with score == Moda.
+Computation: Count(scores == Moda).
+Parameters: player, year, daily_scores, Moda.
+Mínimo bebido en el día que más bebe cada uno: Min score on the day with max score. (This seems like min on max day, but context suggests something else; perhaps the limiting factor.)
+Computation: On the day with max score, find the min score among players.
+Parameters: all players, date of max total, scores[date][players].
+Días en los que todos hemos bebido: Count of days where all players have score > 0.
+Computation: Count(days where all scores[date][players] > 0).
+Parameters: year, daily_scores[date][all_players].
+Mayor racha de todos bebiendo: Longest streak of days where all have score > 0.
+Computation: Max consecutive days all > 0.
+Parameters: year, daily_scores.
+Mayor racha sin beber todos: Longest streak where at least one has 0.
+Computation: Max consecutive days not all > 0.
+Parameters: year, daily_scores.
+6. Relativa al Grupo (Relative Rankings)
+En porcentaje (Relativa): Percentage of total consumption.
+Computation: (Total[player] / Total anual) * 100.
+Parameters: player, Total[player], Total anual.
+Posición global: Rank of player by Total.
+Computation: Rank(Totals[player] descending).
+Parameters: all players' Totals.
+Posición media: Average daily rank.
+Computation: Mean(daily ranks[player]).
+Parameters: player, daily ranks (rank per day based on scores).
+Posición mediana: Median daily rank.
+Computation: Median(daily ranks).
+Parameters: daily ranks.
+Posición de moda: Mode of daily ranks.
+Computation: Mode(daily ranks).
+Parameters: daily ranks.
+Días siendo el que más: Count of days where player has the highest score.
+Computation: Count(days where scores[player] == max(scores[date][all])).
+Parameters: player, year, daily_scores.
+Días siendo el que menos: Count of days where player has the lowest score.
+Computation: Count(days where scores[player] == min(scores[date][all])).
+Parameters: player, year, daily_scores.
+Distancia al siguiente: Difference to the next ranked player.
+Computation: Total[player] - Total[next_player].
+Parameters: rankings, Totals.
+Distancia al anterior: Difference to the previous ranked player.
+Computation: Total[prev_player] - Total[player].
+Parameters: rankings, Totals.
+7. Por Días de la Semana (Day of Week)
+Día favorito: Day with highest total score.
+Computation: Day with max(sum(scores[day_type])).
+Parameters: player, year, scores grouped by weekday.
+Con (Día favorito): Total on favorite day.
+Computation: Sum(scores on favorite day).
+Parameters: player, favorite_day, scores.
+Media (Día favorito): Average score on favorite day.
+Computation: Mean(scores on favorite day).
+Parameters: player, favorite_day, scores.
+Porcentaje (Día favorito): Percentage of total consumption on favorite day.
+Computation: (Sum on favorite / Total) * 100.
+Parameters: Sum on favorite, Total.
+Día destacado: Day with highest leadership percentage (days being highest).
+Computation: Day with max( count(days player highest) / total days of that type ).
+Parameters: player, year, daily_scores, weekdays.
+Porcentaje de liderazgo: Percentage of days being highest on that day type.
+Computation: (Days highest on day_type / Total days of day_type) * 100.
+Parameters: player, day_type, counts.
+Mayor subida / Menor bajada en Valor: Max increase / Min decrease in score vs previous day, by day type.
+Computation: For each day type, max/min (score - prev_score).
+Parameters: player, year, differences by weekday.
+Mayor subida / Menor bajada en porcentaje: Same but as % of prev_score.
+Computation: ((score - prev) / prev) * 100, max/min.
+Parameters: differences, prev_scores.
+Menor subida / Mayor bajada en valor/porcentaje: Opposite for min increase/max decrease.
+Computation: Min of increases, max of decreases.
+Parameters: differences.
+Días incrementados/disminuidos: Count of days with increase/decrease by day type.
+Computation: Count(differences >0 / <0).
+Parameters: differences by weekday.
+8. Por Tendencias Mensuales (Monthly Trends)
+Meses bebiendo el que más/menos: Count of months where player ranked highest/lowest.
+Computation: Count(months where player == max/min monthly scores).
+Parameters: player, year, monthly ranks.
+Media de posición en el mes: Average monthly rank.
+Computation: Mean(monthly ranks).
+Parameters: player, monthly ranks.
+Posición de moda en el mes: Mode of monthly ranks.
+Computation: Mode(monthly ranks).
+Parameters: monthly ranks.
+Posición mediana en el mes: Median of monthly ranks.
+Computation: Median(monthly ranks).
+Parameters: monthly ranks.
+Desviacion (Posición mensual): StdDev of monthly ranks.
+Computation: StdDev(monthly ranks).
+Parameters: monthly ranks.
+Media diaria en el mes más fuerte: Average daily score in strongest month.
+Computation: Mean(scores in month with max total).
+Parameters: player, year, monthly totals, scores.
+Media diaria sin ceros en el mes más fuerte: Average excluding zeros.
+Computation: Mean(scores >0 in strongest month).
+Parameters: as above.
+Media de ceros por mes: Average zeros per month.
+Computation: Mean(count zeros per month).
+Parameters: player, year, monthly zero counts.
+Media de dias bebiendo por mes: Average drinking days per month.
+Computation: Mean(count scores >0 per month).
+Parameters: player, year, monthly drinking counts.
+9. Analizando el Alto Consumo (High Consumption)
+Racha más larga bebiendo 2 digitos: Longest streak of score >=10.
+Computation: Max consecutive score >=10.
+Parameters: player, year, daily_scores.
+Numero de doble doble: Count of days with score >=20? (Assumed from "doble doble").
+Computation: Count(score >=20).
+Parameters: player, year, daily_scores.
+Numero de triple doble: Count of days with score >=30?
+Computation: Count(score >=30).
+Parameters: player, year, daily_scores.
+Max triples dobles en un mes: Max count of triple doubles in a month.
+Computation: Max per month of count(score >=30).
+Parameters: player, year, monthly counts.
+Max dobles en un mes: Max count of double doubles in a month.
+Computation: Max per month of count(score >=20).
+Parameters: player, year, monthly counts.
+10. Por Racha Histórica (Historical Streaks)
+Incremento del máximo histórico: Increase in historical max from previous.
+Computation: Max[year] - Max[year-1].
+Parameters: player, year, historical maxes.
+Máximo histórico actual: Current all-time max.
+Computation: Max(scores all time).
+Parameters: player, all daily_scores.
+Decremento del mínimo histórico: Decrease in historical min.
+Computation: Min[year-1] - Min[year].
+Parameters: player, year, historical mins.
+Mínimo historico actual: Current all-time min.
+Computation: Min(scores all time).
+Parameters: player, all daily_scores.
+Días aumentando el máximo: Count of days setting new historical max.
+Computation: Count(days where score > previous historical max).
+Parameters: player, all daily_scores.
+Días bajando el mínimo: Count of days setting new historical min.
+Computation: Count(days where score < previous historical min).
+Parameters: player, all daily_scores.
+Dias que quedan para haber bebido todos los dias del año: Days without drinking in the year. (365 - drinking days).
+Computation: 365 - Total dias bebiendo.
+Parameters: Total dias bebiendo.
+Nuevos días completados: Days where score >0 for the first time historically.
+Computation: Count(days where score >0 and never before).
+Parameters: player, all daily_scores.
+Dias que quedan para no haber bebido ninguno: Days without drinking historically.
+Computation: Count(days where score ==0 ever).
+Parameters: player, all daily_scores.
+Nuevos ceros conseguidos: Days where score ==0 for the first time.
+Computation: Count(days where score ==0 and not before).
+Parameters: player, all daily_scores.
+11. TOP 3 Días Favoritos del Año
+TOP 3 Días: Top 3 days by total score.
+Computation: Sort days by sum(scores[date]), take top 3.
+Parameters: year, daily_scores[date][all_players].
+
+
+
+
+
+
+
+
