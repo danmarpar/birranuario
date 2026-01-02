@@ -2,7 +2,7 @@
     "name": "Birra Data Dashboard",
     "short_name": "BirraDash",
     "description": "A dashboard for analyzing Birra data with charts and insights.",
-    "start_url": "/birranuario/docs/",
+    "start_url": "/birranuario/index.html",
     "scope": "birranuario",
     "display": "standalone",
     "background_color": "#ffffff",

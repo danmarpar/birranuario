@@ -4,11 +4,10 @@ const CACHE_NAME = 'birra-dashboard-v1';
 const REPO_NAME = '/birranuario'; 
 const urlsToCache = [
     REPO_NAME,
-    REPO_NAME + '/docs/',
-    REPO_NAME + '/docs/index.html',
-    REPO_NAME + '/docs/styles.css',
-    REPO_NAME + '/docs/app.js',
-    REPO_NAME + '/docs/manifest.json'
+    REPO_NAME + '/index.html',
+    REPO_NAME + '/styles.css',
+    REPO_NAME + '/app.js',
+    REPO_NAME + '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
