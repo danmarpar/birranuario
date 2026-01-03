@@ -3,7 +3,7 @@
 let data = [];
 let years = [];
 let players = ['CFC', 'JCR', 'JSP', 'DMP', 'DSS'];
-let isScrollMode = true;
+let isScrollMode = false;
 let observer;
 
 async function loadData() {
@@ -35,6 +35,8 @@ async function loadData() {
         document.getElementById('scrollToggle').addEventListener('click', () => {
             isScrollMode = !isScrollMode;
             document.getElementById('scrollToggle').textContent = `Scroll Mode: ${isScrollMode ? 'On' : 'Off'}`;
+            document.body.classList.toggle('scroll-mode', isScrollMode);
+            document.body.style.overflow = isScrollMode ? 'hidden' : 'auto';
             updatePlayerInsights();
         });
     } catch (error) {
@@ -481,35 +483,21 @@ function maxConsecutive(arr) {
 document.addEventListener('DOMContentLoaded', loadData);
 
 function applyScrollMode() {
-    if (observer) observer.disconnect();
     const activeInsight = document.querySelector('.insight-section.active');
     const contentDiv = activeInsight.querySelector('div[id$="-content"]');
     if (isScrollMode) {
         const stats = contentDiv.querySelectorAll('.stat');
         stats.forEach(stat => {
             const wrapper = document.createElement('div');
-            wrapper.className = 'stat-item';
+            wrapper.className = 'cylinder__text__item';
             stat.parentNode.replaceChild(wrapper, stat);
             wrapper.appendChild(stat);
         });
-        const insights = document.getElementById('insights');
-        const spacer = document.createElement('div');
-        spacer.style.height = `${Math.max(stats.length * 60, 500)}px`;
-        contentDiv.appendChild(spacer);
-        function showClosestStat() {
-            const stats = Array.from(document.querySelectorAll('.stat-item'));
-            const threshold = 60;
-            const index = Math.floor(insights.scrollTop / threshold);
-            const safeIndex = Math.min(index, stats.length - 1);
-            stats.forEach((item, i) => {
-                if (i === safeIndex) {
-                    item.classList.add('visible');
-                } else {
-                    item.classList.remove('visible');
-                }
-            });
-        }
-        insights.addEventListener('scroll', showClosestStat);
-        showClosestStat(); // show initial
+        const cylinder = document.createElement('div');
+        cylinder.className = 'cylinder__text__wrapper';
+        const statItems = document.querySelectorAll('.cylinder__text__item');
+        statItems.forEach(item => cylinder.appendChild(item));
+        contentDiv.appendChild(cylinder);
+        new Cylinder();
     }
 }

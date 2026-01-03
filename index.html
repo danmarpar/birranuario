@@ -17,7 +17,7 @@
                 <li><a href="#players">Player Insights</a></li>
             </ul>
         </nav>
-        <button id="scrollToggle">Scroll Mode: On</button>
+        <button id="scrollToggle">Scroll Mode: Off</button>
     </header>
     <main>
         <section id="overview">
@@ -32,7 +32,7 @@
             <canvas id="monthChart" width="400" height="200"></canvas>
         </section>
         <section id="players">
-            <h2>Player Insights</h2>
+            <h2 class="cylinder__title">Player Insights</h2>
             <div id="selectors">
                 <select id="playerDropdown">
                     <option value="CFC">CFC</option>
@@ -58,7 +58,7 @@
                     <option value="topdays">Top Days</option>
                 </select>
             </div>
-            <div id="insights">
+            <div id="insights" class="cylinder__wrapper">
                 <div id="individual" class="insight-section">
                     <h3>Individual Consumption Stats</h3>
                     <div id="individual-content"></div>
@@ -109,6 +109,7 @@
     <footer>
         <p>&copy; 2026 Birra Dashboard</p>
     </footer>
+    <script src="js/cylinder.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
