@@ -18,6 +18,24 @@ header {
     color: white;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+#scrollToggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#scrollToggle:hover {
+    background: rgba(255,255,255,0.3);
 }
 
 header h1 {
@@ -46,11 +64,27 @@ nav a:hover, nav a.active {
 .stat-label {
     color: #555;
     font-weight: normal;
+    display: block;
+    font-size: 1rem;
+    margin-top: 5px;
 }
 
 .stat-value {
     font-weight: bold;
     color: #EECD3B;
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.stat-item .stat-value {
+    font-size: 5rem;
+}
+
+.stat {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Player colors */
@@ -197,7 +231,19 @@ footer {
     margin-top: 2rem;
 }
 
-/* Responsive Design */
+/* Scroll animation for stats */
+.stat-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    margin-bottom: 60px;
+}
+
+.stat-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 @media (max-width: 768px) {
     nav ul {
         flex-direction: column;

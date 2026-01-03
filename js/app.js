@@ -3,6 +3,8 @@
 let data = [];
 let years = [];
 let players = ['CFC', 'JCR', 'JSP', 'DMP', 'DSS'];
+let isScrollMode = true;
+let observer;
 
 async function loadData() {
     try {
@@ -30,6 +32,11 @@ async function loadData() {
         initializeOverview();
         initializePlayers();
         initializeNavigation();
+        document.getElementById('scrollToggle').addEventListener('click', () => {
+            isScrollMode = !isScrollMode;
+            document.getElementById('scrollToggle').textContent = `Scroll Mode: ${isScrollMode ? 'On' : 'Off'}`;
+            updatePlayerInsights();
+        });
     } catch (error) {
         console.error('Error loading data:', error);
     }
@@ -190,6 +197,7 @@ function updatePlayerInsights() {
     computeHighConsumption(player, year);
     computeHistoricalStreaks(player);
     computeTopDays(year);
+    applyScrollMode();
 }
 
 function computeIndividualConsumption(player, year) {
@@ -210,18 +218,18 @@ function computeIndividualConsumption(player, year) {
     const dias1_2 = playerData.filter(v => v >= 1 && v <= 2).length;
 
     div.innerHTML = `
-        <p><span class="stat-label">Total:</span> <span class="stat-value">${total}</span></p>
-        <p><span class="stat-label">Maximo en un dia:</span> <span class="stat-value">${max}</span></p>
-        <p><span class="stat-label">Media:</span> <span class="stat-value">${media.toFixed(2)}</span></p>
-        <p><span class="stat-label">Mediana:</span> <span class="stat-value">${mediana}</span></p>
-        <p><span class="stat-label">Desviación:</span> <span class="stat-value">${desviacion.toFixed(2)}</span> (<span class="stat-value">${((desviacion / media) * 100).toFixed(2)}%</span>)</p>
-        <p><span class="stat-label">Media bebiendo:</span> <span class="stat-value">${mediaBebiendo.toFixed(2)}</span></p>
-        <p><span class="stat-label">Mediana bebiendo:</span> <span class="stat-value">${medianaBebiendo}</span></p>
-        <p><span class="stat-label">Desviación bebiendo:</span> <span class="stat-value">${desviacionBebiendo.toFixed(2)}</span> (<span class="stat-value">${((desviacionBebiendo / mediaBebiendo) * 100).toFixed(2)}%</span>)</p>
-        <p><span class="stat-label">Dias con 10 o más:</span> <span class="stat-value">${dias10}</span> (<span class="stat-value">${((dias10 / playerData.length) * 100).toFixed(2)}%</span>)</p>
-        <p><span class="stat-label">Dias con 6-9:</span> <span class="stat-value">${dias6_9}</span> (<span class="stat-value">${((dias6_9 / playerData.length) * 100).toFixed(2)}%</span>)</p>
-        <p><span class="stat-label">Dias con 3-5:</span> <span class="stat-value">${dias3_5}</span> (<span class="stat-value">${((dias3_5 / playerData.length) * 100).toFixed(2)}%</span>)</p>
-        <p><span class="stat-label">Dias con 1-2:</span> <span class="stat-value">${dias1_2}</span> (<span class="stat-value">${((dias1_2 / playerData.length) * 100).toFixed(2)}%</span>)</p>
+        <div class="stat"><div class="stat-value">${total}</div><div class="stat-label">Total</div></div>
+        <div class="stat"><div class="stat-value">${max}</div><div class="stat-label">Maximo en un dia</div></div>
+        <div class="stat"><div class="stat-value">${media.toFixed(2)}</div><div class="stat-label">Media</div></div>
+        <div class="stat"><div class="stat-value">${mediana}</div><div class="stat-label">Mediana</div></div>
+        <div class="stat"><div class="stat-value">${desviacion.toFixed(2)}</div><div class="stat-label">Desviación (${((desviacion / media) * 100).toFixed(2)}%)</div></div>
+        <div class="stat"><div class="stat-value">${mediaBebiendo.toFixed(2)}</div><div class="stat-label">Media bebiendo</div></div>
+        <div class="stat"><div class="stat-value">${medianaBebiendo}</div><div class="stat-label">Mediana bebiendo</div></div>
+        <div class="stat"><div class="stat-value">${desviacionBebiendo.toFixed(2)}</div><div class="stat-label">Desviación bebiendo (${((desviacionBebiendo / mediaBebiendo) * 100).toFixed(2)}%)</div></div>
+        <div class="stat"><div class="stat-value">${dias10}</div><div class="stat-label">Dias con 10 o más (${((dias10 / playerData.length) * 100).toFixed(2)}%)</div></div>
+        <div class="stat"><div class="stat-value">${dias6_9}</div><div class="stat-label">Dias con 6-9 (${((dias6_9 / playerData.length) * 100).toFixed(2)}%)</div></div>
+        <div class="stat"><div class="stat-value">${dias3_5}</div><div class="stat-label">Dias con 3-5 (${((dias3_5 / playerData.length) * 100).toFixed(2)}%)</div></div>
+        <div class="stat"><div class="stat-value">${dias1_2}</div><div class="stat-label">Dias con 1-2 (${((dias1_2 / playerData.length) * 100).toFixed(2)}%)</div></div>
     `;
 }
 
@@ -240,14 +248,14 @@ function computeOverallConsumption(year) {
     const desviacion = stdDev(totals);
 
     div.innerHTML = `
-        <p><span class="stat-label">Total anual:</span> <span class="stat-value">${totalAnual}</span> (<span class="stat-value">${mediaCabeza.toFixed(2)}</span> por cabeza)</p>
-        <p><span class="stat-label">Máximo en un día:</span> <span class="stat-value">${maxDia}</span></p>
-        <p><span class="stat-label">Mínimo en un día:</span> <span class="stat-value">${minDia}</span></p>
-        <p><span class="stat-label">Media diaria:</span> <span class="stat-value">${mediaDiaria.toFixed(2)}</span> (<span class="stat-value">${(mediaDiaria / 5).toFixed(2)}</span> por cabeza)</p>
-        <p><span class="stat-label">Moda:</span> <span class="stat-value">${moda}</span> (<span class="stat-value">${(moda / 5).toFixed(2)}</span> por cabeza)</p>
-        <p><span class="stat-label">Días en la moda:</span> <span class="stat-value">${diasModa}</span></p>
-        <p><span class="stat-label">Mediana:</span> <span class="stat-value">${mediana}</span> (<span class="stat-value">${(mediana / 5).toFixed(2)}</span> por cabeza)</p>
-        <p><span class="stat-label">Desviación:</span> <span class="stat-value">${desviacion.toFixed(2)}</span> (<span class="stat-value">${((desviacion / (totalAnual / yearData.length)) * 100).toFixed(2)}%</span>)</p>
+        <div class="stat"><div class="stat-value">${totalAnual}</div><div class="stat-label">Total anual (${mediaCabeza.toFixed(2)} por cabeza)</div></div>
+        <div class="stat"><div class="stat-value">${maxDia}</div><div class="stat-label">Máximo en un día</div></div>
+        <div class="stat"><div class="stat-value">${minDia}</div><div class="stat-label">Mínimo en un día</div></div>
+        <div class="stat"><div class="stat-value">${mediaDiaria.toFixed(2)}</div><div class="stat-label">Media diaria (${(mediaDiaria / 5).toFixed(2)} por cabeza)</div></div>
+        <div class="stat"><div class="stat-value">${moda}</div><div class="stat-label">Moda (${(moda / 5).toFixed(2)} por cabeza)</div></div>
+        <div class="stat"><div class="stat-value">${diasModa}</div><div class="stat-label">Días en la moda</div></div>
+        <div class="stat"><div class="stat-value">${mediana}</div><div class="stat-label">Mediana (${(mediana / 5).toFixed(2)} por cabeza)</div></div>
+        <div class="stat"><div class="stat-value">${desviacion.toFixed(2)}</div><div class="stat-label">Desviación (${((desviacion / (totalAnual / yearData.length)) * 100).toFixed(2)}%)</div></div>
     `;
 }
 
@@ -258,12 +266,12 @@ function computeYearlyTrends(player) {
     for (let i = 1; i < years.length; i++) {
         const variacion = yearlyTotals[i] - yearlyTotals[i-1];
         const porcentual = ((variacion / yearlyTotals[i-1]) * 100).toFixed(2);
-        content += `<p><span class="stat-label">${years[i]}:</span> Variación <span class="stat-value">${variacion}</span>, <span class="stat-value">${porcentual}%</span></p>`;
+        content += `<div class="stat"><div class="stat-value">${variacion}</div><div class="stat-label">${years[i]} Variación (${porcentual}%)</div></div>`;
     }
     const media = yearlyTotals.reduce((s, v) => s + v, 0) / yearlyTotals.length;
     const mediana = median(yearlyTotals);
     const desviacion = stdDev(yearlyTotals);
-    content += `<p><span class="stat-label">Media:</span> <span class="stat-value">${media.toFixed(2)}</span></p><p><span class="stat-label">Mediana:</span> <span class="stat-value">${mediana}</span></p><p><span class="stat-label">Desviación:</span> <span class="stat-value">${desviacion.toFixed(2)}</span> (<span class="stat-value">${((desviacion / media) * 100).toFixed(2)}%</span>)</p>`;
+    content += `<div class="stat"><div class="stat-value">${media.toFixed(2)}</div><div class="stat-label">Media</div></div><div class="stat"><div class="stat-value">${mediana}</div><div class="stat-label">Mediana</div></div><div class="stat"><div class="stat-value">${desviacion.toFixed(2)}</div><div class="stat-label">Desviación (${((desviacion / media) * 100).toFixed(2)}%)</div></div>`;
     div.innerHTML = content;
 }
 
@@ -281,11 +289,11 @@ function computeMonthlyStats(player, year) {
     const mediana = median(monthlyTotals);
     const desviacion = stdDev(monthlyTotals);
     div.innerHTML = `
-        <p><span class="stat-label">Max:</span> <span class="stat-value">${max}</span></p>
-        <p><span class="stat-label">Min:</span> <span class="stat-value">${min}</span></p>
-        <p><span class="stat-label">Media:</span> <span class="stat-value">${media.toFixed(2)}</span></p>
-        <p><span class="stat-label">Mediana:</span> <span class="stat-value">${mediana}</span></p>
-        <p><span class="stat-label">Desviación:</span> <span class="stat-value">${desviacion.toFixed(2)}</span> (<span class="stat-value">${((desviacion / media) * 100).toFixed(2)}%</span>)</p>
+        <div class="stat"><div class="stat-value">${max}</div><div class="stat-label">Max</div></div>
+        <div class="stat"><div class="stat-value">${min}</div><div class="stat-label">Min</div></div>
+        <div class="stat"><div class="stat-value">${media.toFixed(2)}</div><div class="stat-label">Media</div></div>
+        <div class="stat"><div class="stat-value">${mediana}</div><div class="stat-label">Mediana</div></div>
+        <div class="stat"><div class="stat-value">${desviacion.toFixed(2)}</div><div class="stat-label">Desviación (${((desviacion / media) * 100).toFixed(2)}%)</div></div>
     `;
 }
 
@@ -309,18 +317,18 @@ function computeStreaks(player, year) {
     const cantidadModa = mode(playerData);
     const diasModa = playerData.filter(v => v === cantidadModa).length;
     div.innerHTML = `
-        <p><span class="stat-label">Dias más que el anterior:</span> <span class="stat-value">${masQueAnterior}</span></p>
-        <p><span class="stat-label">Dias menos que el anterior:</span> <span class="stat-value">${menosQueAnterior}</span></p>
-        <p><span class="stat-label">Dias igual que anterior:</span> <span class="stat-value">${igualQueAnterior}</span></p>
-        <p><span class="stat-label">Media diferencia:</span> <span class="stat-value">${mediaDif.toFixed(2)}</span></p>
-        <p><span class="stat-label">Mediana diferencia:</span> <span class="stat-value">${medianaDif}</span></p>
-        <p><span class="stat-label">Moda diferencia:</span> <span class="stat-value">${modaDif}</span></p>
-        <p><span class="stat-label">Mas días seguidos bebiendo:</span> <span class="stat-value">${maxStreakDrinking}</span></p>
-        <p><span class="stat-label">Más días seguidos sin beber:</span> <span class="stat-value">${maxStreakNot}</span></p>
-        <p><span class="stat-label">Total dias bebiendo:</span> <span class="stat-value">${totalBebiendo}</span></p>
-        <p><span class="stat-label">Total dias sin beber:</span> <span class="stat-value">${totalSin}</span></p>
-        <p><span class="stat-label">Cantidad de moda:</span> <span class="stat-value">${cantidadModa}</span></p>
-        <p><span class="stat-label">Días bebiendo en la moda:</span> <span class="stat-value">${diasModa}</span></p>
+        <div class="stat"><div class="stat-value">${masQueAnterior}</div><div class="stat-label">Dias más que el anterior</div></div>
+        <div class="stat"><div class="stat-value">${menosQueAnterior}</div><div class="stat-label">Dias menos que el anterior</div></div>
+        <div class="stat"><div class="stat-value">${igualQueAnterior}</div><div class="stat-label">Dias igual que anterior</div></div>
+        <div class="stat"><div class="stat-value">${mediaDif.toFixed(2)}</div><div class="stat-label">Media diferencia</div></div>
+        <div class="stat"><div class="stat-value">${medianaDif}</div><div class="stat-label">Mediana diferencia</div></div>
+        <div class="stat"><div class="stat-value">${modaDif}</div><div class="stat-label">Moda diferencia</div></div>
+        <div class="stat"><div class="stat-value">${maxStreakDrinking}</div><div class="stat-label">Mas días seguidos bebiendo</div></div>
+        <div class="stat"><div class="stat-value">${maxStreakNot}</div><div class="stat-label">Más días seguidos sin beber</div></div>
+        <div class="stat"><div class="stat-value">${totalBebiendo}</div><div class="stat-label">Total dias bebiendo</div></div>
+        <div class="stat"><div class="stat-value">${totalSin}</div><div class="stat-label">Total dias sin beber</div></div>
+        <div class="stat"><div class="stat-value">${cantidadModa}</div><div class="stat-label">Cantidad de moda</div></div>
+        <div class="stat"><div class="stat-value">${diasModa}</div><div class="stat-label">Días bebiendo en la moda</div></div>
     `;
 }
 
@@ -342,13 +350,13 @@ function computeRelativeRankings(player, year) {
     const diasMas = yearData.filter(d => d[player] === Math.max(...players.map(p => d[p]))).length;
     const diasMenos = yearData.filter(d => d[player] === Math.min(...players.map(p => d[p]))).length;
     div.innerHTML = `
-        <p><span class="stat-label">En porcentaje:</span> <span class="stat-value">${porcentaje.toFixed(2)}%</span></p>
-        <p><span class="stat-label">Posición global:</span> <span class="stat-value">${posicion}</span></p>
-        <p><span class="stat-label">Posición media:</span> <span class="stat-value">${posicionMedia.toFixed(2)}</span></p>
-        <p><span class="stat-label">Posición mediana:</span> <span class="stat-value">${posicionMediana}</span></p>
-        <p><span class="stat-label">Posición de moda:</span> <span class="stat-value">${posicionModa}</span></p>
-        <p><span class="stat-label">Días siendo el que más:</span> <span class="stat-value">${diasMas}</span></p>
-        <p><span class="stat-label">Días siendo el que menos:</span> <span class="stat-value">${diasMenos}</span></p>
+        <div class="stat"><div class="stat-value">${porcentaje.toFixed(2)}%</div><div class="stat-label">En porcentaje</div></div>
+        <div class="stat"><div class="stat-value">${posicion}</div><div class="stat-label">Posición global</div></div>
+        <div class="stat"><div class="stat-value">${posicionMedia.toFixed(2)}</div><div class="stat-label">Posición media</div></div>
+        <div class="stat"><div class="stat-value">${posicionMediana}</div><div class="stat-label">Posición mediana</div></div>
+        <div class="stat"><div class="stat-value">${posicionModa}</div><div class="stat-label">Posición de moda</div></div>
+        <div class="stat"><div class="stat-value">${diasMas}</div><div class="stat-label">Días siendo el que más</div></div>
+        <div class="stat"><div class="stat-value">${diasMenos}</div><div class="stat-label">Días siendo el que menos</div></div>
     `;
 }
 
@@ -369,10 +377,10 @@ function computeWeekdays(player, year) {
     const media = con / dayCounts[favoriteDay];
     const porcentaje = (con / yearData.reduce((s, d) => s + d[player], 0)) * 100;
     div.innerHTML = `
-        <p><span class="stat-label">Día favorito:</span> <span class="stat-value">${dayNames[favoriteDay]}</span></p>
-        <p><span class="stat-label">Con:</span> <span class="stat-value">${con}</span></p>
-        <p><span class="stat-label">Media:</span> <span class="stat-value">${media.toFixed(2)}</span></p>
-        <p><span class="stat-label">Porcentaje:</span> <span class="stat-value">${porcentaje.toFixed(2)}%</span></p>
+        <div class="stat"><div class="stat-value">${dayNames[favoriteDay]}</div><div class="stat-label">Día favorito</div></div>
+        <div class="stat"><div class="stat-value">${con}</div><div class="stat-label">Con</div></div>
+        <div class="stat"><div class="stat-value">${media.toFixed(2)}</div><div class="stat-label">Media</div></div>
+        <div class="stat"><div class="stat-value">${porcentaje.toFixed(2)}%</div><div class="stat-label">Porcentaje</div></div>
     `;
 }
 
@@ -405,16 +413,16 @@ function computeMonthlyTrends(player, year) {
     const mediaCerosPorMes = (365 - data.filter(d => d.date.startsWith(year)).filter(d => d[player] > 0).length) / 12; // approx
     const mediaDiasBebiendoPorMes = data.filter(d => d.date.startsWith(year)).filter(d => d[player] > 0).length / 12;
     div.innerHTML = `
-        <p><span class="stat-label">Meses bebiendo el que más:</span> <span class="stat-value">${mesesMas}</span></p>
-        <p><span class="stat-label">Meses bebiendo el que menos:</span> <span class="stat-value">${mesesMenos}</span></p>
-        <p><span class="stat-label">Media de posición en el mes:</span> <span class="stat-value">${mediaPosicion.toFixed(2)}</span></p>
-        <p><span class="stat-label">Posición de moda en el mes:</span> <span class="stat-value">${posicionModa}</span></p>
-        <p><span class="stat-label">Posición mediana en el mes:</span> <span class="stat-value">${posicionMediana}</span></p>
-        <p><span class="stat-label">Desviacion:</span> <span class="stat-value">${desviacion.toFixed(2)}</span></p>
-        <p><span class="stat-label">Media diaria en el mes más fuerte:</span> <span class="stat-value">${mediaDiariaFuerte.toFixed(2)}</span></p>
-        <p><span class="stat-label">Media diaria sin ceros en el mes más fuerte:</span> <span class="stat-value">${mediaDiariaFuerteSinCeros.toFixed(2)}</span></p>
-        <p><span class="stat-label">Media de ceros por mes:</span> <span class="stat-value">${mediaCerosPorMes.toFixed(2)}</span></p>
-        <p><span class="stat-label">Media de dias bebiendo por mes:</span> <span class="stat-value">${mediaDiasBebiendoPorMes.toFixed(2)}</span></p>
+        <div class="stat"><div class="stat-value">${mesesMas}</div><div class="stat-label">Meses bebiendo el que más</div></div>
+        <div class="stat"><div class="stat-value">${mesesMenos}</div><div class="stat-label">Meses bebiendo el que menos</div></div>
+        <div class="stat"><div class="stat-value">${mediaPosicion.toFixed(2)}</div><div class="stat-label">Media de posición en el mes</div></div>
+        <div class="stat"><div class="stat-value">${posicionModa}</div><div class="stat-label">Posición de moda en el mes</div></div>
+        <div class="stat"><div class="stat-value">${posicionMediana}</div><div class="stat-label">Posición mediana en el mes</div></div>
+        <div class="stat"><div class="stat-value">${desviacion.toFixed(2)}</div><div class="stat-label">Desviacion</div></div>
+        <div class="stat"><div class="stat-value">${mediaDiariaFuerte.toFixed(2)}</div><div class="stat-label">Media diaria en el mes más fuerte</div></div>
+        <div class="stat"><div class="stat-value">${mediaDiariaFuerteSinCeros.toFixed(2)}</div><div class="stat-label">Media diaria sin ceros en el mes más fuerte</div></div>
+        <div class="stat"><div class="stat-value">${mediaCerosPorMes.toFixed(2)}</div><div class="stat-label">Media de ceros por mes</div></div>
+        <div class="stat"><div class="stat-value">${mediaDiasBebiendoPorMes.toFixed(2)}</div><div class="stat-label">Media de dias bebiendo por mes</div></div>
     `;
 }
 
@@ -422,14 +430,14 @@ function computeHighConsumption(player, year) {
     const div = document.getElementById('high-content');
     const playerData = data.filter(d => d.date.startsWith(year)).map(d => d[player]);
     const rachaMasLarga = maxConsecutive(playerData.map(v => v >= 10));
-    div.innerHTML = `<p><span class="stat-label">Racha más larga bebiendo 2 dígitos:</span> <span class="stat-value">${rachaMasLarga}</span></p>`;
+    div.innerHTML = `<div class="stat"><div class="stat-value">${rachaMasLarga}</div><div class="stat-label">Racha más larga bebiendo 2 dígitos</div></div>`;
 }
 
 function computeHistoricalStreaks(player) {
     const div = document.getElementById('historical-content');
     const allTotals = years.map(y => data.filter(d => d.date.startsWith(y)).reduce((s, d) => s + d[player], 0));
     const maxHistorico = Math.max(...allTotals);
-    div.innerHTML = `<p><span class="stat-label">Máximo histórico actual:</span> <span class="stat-value">${maxHistorico}</span></p>`;
+    div.innerHTML = `<div class="stat"><div class="stat-value">${maxHistorico}</div><div class="stat-label">Máximo histórico actual</div></div>`;
 }
 
 function computeTopDays(year) {
@@ -437,7 +445,7 @@ function computeTopDays(year) {
     const yearData = data.filter(d => d.date.startsWith(year));
     const dayTotals = yearData.map(d => ({ date: d.date, total: d.CFC + d.JCR + d.JSP + d.DMP + d.DSS })).sort((a, b) => b.total - a.total);
     const top3 = dayTotals.slice(0, 3);
-    div.innerHTML = top3.map(d => `<p><span class="stat-label">${d.date}:</span> <span class="stat-value">${d.total}</span></p>`).join('');
+    div.innerHTML = top3.map(d => `<div class="stat"><div class="stat-value">${d.total}</div><div class="stat-label">${d.date}</div></div>`).join('');
 }
 
 // Utility functions
@@ -471,3 +479,41 @@ function maxConsecutive(arr) {
 
 // Load data on page load
 document.addEventListener('DOMContentLoaded', loadData);
+
+function applyScrollMode() {
+    if (observer) observer.disconnect();
+    const activeInsight = document.querySelector('.insight-section.active');
+    const contentDiv = activeInsight.querySelector('div[id$="-content"]');
+    if (isScrollMode) {
+        const stats = contentDiv.querySelectorAll('.stat');
+        stats.forEach(stat => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'stat-item';
+            stat.parentNode.replaceChild(wrapper, stat);
+            wrapper.appendChild(stat);
+        });
+        function showClosestStat() {
+            const viewportCenter = window.innerHeight / 2 + window.scrollY;
+            let closest = null;
+            let minDistance = Infinity;
+            document.querySelectorAll('.stat-item').forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const itemCenter = rect.top + window.scrollY + rect.height / 2;
+                const distance = Math.abs(viewportCenter - itemCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closest = item;
+                }
+            });
+            document.querySelectorAll('.stat-item').forEach(item => {
+                if (item === closest) {
+                    item.classList.add('visible');
+                } else {
+                    item.classList.remove('visible');
+                }
+            });
+        }
+        window.addEventListener('scroll', showClosestStat);
+        showClosestStat(); // show initial
+    }
+}

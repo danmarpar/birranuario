@@ -17,6 +17,7 @@
                 <li><a href="#players">Player Insights</a></li>
             </ul>
         </nav>
+        <button id="scrollToggle">Scroll Mode: On</button>
     </header>
     <main>
         <section id="overview">
@@ -33,7 +34,6 @@
         <section id="players">
             <h2>Player Insights</h2>
             <div id="player-select">
-                <label for="playerDropdown">Select Player:</label>
                 <select id="playerDropdown">
                     <option value="CFC">CFC</option>
                     <option value="JCR">JCR</option>
@@ -41,13 +41,11 @@
                     <option value="DMP">DMP</option>
                     <option value="DSS">DSS</option>
                 </select>
-                <label for="yearDropdown">Select Year:</label>
                 <select id="yearDropdown">
                     <!-- populated by JS -->
                 </select>
             </div>
             <div id="insight-select">
-                <label for="insightDropdown">Select Insight:</label>
                 <select id="insightDropdown">
                     <option value="individual">Individual Consumption</option>
                     <option value="overall">Overall Consumption</option>
