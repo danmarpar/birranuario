@@ -492,28 +492,24 @@ function applyScrollMode() {
             stat.parentNode.replaceChild(wrapper, stat);
             wrapper.appendChild(stat);
         });
+        const insights = document.getElementById('insights');
+        const spacer = document.createElement('div');
+        spacer.style.height = `${Math.max(stats.length * 60, 500)}px`;
+        contentDiv.appendChild(spacer);
         function showClosestStat() {
-            const viewportCenter = window.innerHeight / 2 + window.scrollY;
-            let closest = null;
-            let minDistance = Infinity;
-            document.querySelectorAll('.stat-item').forEach(item => {
-                const rect = item.getBoundingClientRect();
-                const itemCenter = rect.top + window.scrollY + rect.height / 2;
-                const distance = Math.abs(viewportCenter - itemCenter);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closest = item;
-                }
-            });
-            document.querySelectorAll('.stat-item').forEach(item => {
-                if (item === closest) {
+            const stats = Array.from(document.querySelectorAll('.stat-item'));
+            const threshold = 60;
+            const index = Math.floor(insights.scrollTop / threshold);
+            const safeIndex = Math.min(index, stats.length - 1);
+            stats.forEach((item, i) => {
+                if (i === safeIndex) {
                     item.classList.add('visible');
                 } else {
                     item.classList.remove('visible');
                 }
             });
         }
-        window.addEventListener('scroll', showClosestStat);
+        insights.addEventListener('scroll', showClosestStat);
         showClosestStat(); // show initial
     }
 }

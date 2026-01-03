@@ -11,6 +11,9 @@ body {
     color: #333;
     background-color: #f4f4f4;
     transition: background-color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -149,6 +152,8 @@ th {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 10;
 }
 
 #player-select label {
@@ -213,6 +218,11 @@ select:hover {
     display: block;
 }
 
+#insights {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -229,14 +239,18 @@ footer {
     padding: 1rem;
     background: #333;
     color: white;
-    margin-top: 2rem;
+    margin-top: auto;
 }
 
 /* Scroll animation for stats */
 .stat-item {
+    position: fixed;
+    top: 200px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 0.8s ease;
     margin-bottom: 60px;
 }
 
